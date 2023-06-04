@@ -1,0 +1,103 @@
+openapi: 3.0.0
+info:
+  title: Cash Dispensing API
+  version: 1.0.0
+paths:
+  /initialize:
+    post:
+      summary: Initialize Cash Dispenser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CashRequest'
+      responses:
+        '200':
+          description: Cash dispenser initialized successfully
+        '400':
+          description: Invalid request or Cash dispenser has already been initialized
+  /remove:
+    post:
+      summary: Remove Cash Notes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CashRequest'
+      responses:
+        '200':
+          description: Notes removed successfully
+        '400':
+          description: Invalid request or Insufficient cash available
+  /add:
+    post:
+      summary: Add Cash Notes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CashRequest'
+      responses:
+        '200':
+          description: Notes added successfully
+        '400':
+          description: Invalid request or Invalid amount
+  /dispense:
+    post:
+      summary: Dispense Cash
+      parameters:
+        - name: amount
+          in: query
+          required: true
+          schema:
+            type: number
+            format: double
+      responses:
+        '200':
+          description: Cash dispensed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DispenseResponse'
+        '400':
+          description: Invalid request or Insufficient cash available
+  /availability:
+    get:
+      summary: Check Cash Availability
+      responses:
+        '200':
+          description: Cash availability retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CashAvailability'
+components:
+  schemas:
+    CashRequest:
+      type: object
+      properties:
+        twentyNoteCount:
+          type: integer
+          minimum: 0
+        fiftyNoteCount:
+          type: integer
+          minimum: 0
+    DispenseResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+    CashAvailability:
+      type: object
+      properties:
+        twentyNoteCount:
+          type: integer
+          minimum: 0
+        fiftyNoteCount:
+          type: integer
+          minimum: 0
