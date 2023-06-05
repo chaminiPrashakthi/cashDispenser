@@ -12,9 +12,9 @@ import java.util.Map;
 @Service
 public class CashDispenserService {
 
-    private final Logger logger = LoggerFactory.getLogger(CashDispenserService.class);
+    private Logger logger = LoggerFactory.getLogger(CashDispenserService.class);
 
-    private final CashDispenser cashDispenser;
+    private CashDispenser cashDispenser;
 
     public CashDispenserService() {
         this.cashDispenser = new CashDispenser();
@@ -46,20 +46,20 @@ public class CashDispenserService {
             Map<NoteType, Integer> notesToRemove = new HashMap<>();
             notesToRemove.put(NoteType.TWENTY, request.getTwentyNoteCount());
             notesToRemove.put(NoteType.FIFTY, request.getFiftyNoteCount());
-            
+
             for (Map.Entry<NoteType, Integer> entry : notesToRemove.entrySet()) {
                 NoteType noteType = entry.getKey();
                 int count = entry.getValue();
                 cashDispenser.removeNotes(noteType, count);
             }
-            
+
             logger.info("Cash removed");
         } catch (IllegalArgumentException e) {
             logger.error("Failed to remove cash: {}", e.getMessage());
             throw new CashDispenserException("Failed to remove cash", e);
         }
     }
-    
+
     public DispenseResponse dispenseCash(double amount) {
         logger.info("Dispensing cash");
         try {
@@ -71,5 +71,21 @@ public class CashDispenserService {
             logger.error("Failed to dispense cash: {}", e.getMessage());
             return new DispenseResponse(false, e.getMessage());
         }
+    }
+
+    public Logger getLogger() {
+        return logger;
+    }
+
+    public CashDispenser getCashDispenser() {
+        return cashDispenser;
+    }
+
+    public void setCashDispenser(CashDispenser cashDispenser) {
+        this.cashDispenser = cashDispenser;
+    }
+
+    public void setLogger(Logger logger) {
+        this.logger = logger;
     }
 }
